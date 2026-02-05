@@ -1282,7 +1282,7 @@ export function HomePage({ language }: HomePageProps) {
             <div className="absolute inset-0">
               {/* 预览图片 */}
               <img
-                src="/assets/images/xiaoji.png"
+                src="/smart-croop/assets/images/xiaoji.png"
                 alt="Chicken Coop Preview"
                 className="w-full h-full object-cover"
               />
