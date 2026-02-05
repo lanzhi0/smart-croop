@@ -565,6 +565,9 @@ export function HomePage({ language }: HomePageProps) {
           } catch (simpleError) {
             alert('无法满足麦克风参数要求，请尝试使用其他设备或浏览器');
           }
+        } else if (permissionError.message && permissionError.message.includes('webrtc is disabled')) {
+          // WebRTC被禁用的情况
+          alert('WebRTC被禁用，无法访问麦克风\n\n请在浏览器设置中启用WebRTC，然后重新尝试:\n\n📱 iOS Safari:\n设置 > Safari > 高级 > 网站设置 > WebRTC > 允许\n\n🤖 Android Chrome:\n设置 > 网站设置 > 摄像头 > 允许所有网站使用摄像头\n设置 > 网站设置 > 麦克风 > 允许所有网站使用麦克风\n\n💡 提示: 您可能需要刷新页面并重新尝试');
         } else {
           alert(`无法访问麦克风: ${permissionError.message || '未知错误'}\n\n请检查权限设置和设备状态，然后重新尝试`);
         }
