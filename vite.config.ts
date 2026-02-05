@@ -15,6 +15,7 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  base: '/smart-croop/',
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
