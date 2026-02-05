@@ -4,6 +4,10 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   base: '/smart-croop/',
+  build: {
+    outDir: '.',
+    emptyOutDir: false,
+  },
   plugins: [
     react(),
   ],
