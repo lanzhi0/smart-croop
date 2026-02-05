@@ -477,12 +477,22 @@ export function HomePage({ language }: HomePageProps) {
     try {
       // 检查浏览器是否支持getUserMedia
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        throw new Error('您的浏览器不支持麦克风访问功能');
+        alert('您的浏览器不支持麦克风访问功能，请使用最新版本的Chrome、Firefox或Safari浏览器');
+        return;
       }
+
+      // 显示录音准备提示
+      alert('即将请求麦克风权限，请在弹出的对话框中点击"允许"以启用录音功能');
 
       // 请求麦克风权限
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+          audio: {
+            autoGainControl: true,
+            echoCancellation: true,
+            noiseSuppression: true
+          }
+        });
         streamRef.current = stream;
         
         // 创建MediaRecorder实例
@@ -514,20 +524,54 @@ export function HomePage({ language }: HomePageProps) {
         mediaRecorder.start();
         setIsRecording(true);
       } catch (permissionError: any) {
+        console.error('麦克风权限申请失败:', permissionError);
+        
         if (permissionError.name === 'NotAllowedError' || permissionError.name === 'PermissionDeniedError') {
           // 权限被拒绝，提供更详细的指引，符合iOS和Android最新权限规范
-          alert('麦克风权限被拒绝，请在设备设置中允许此应用访问麦克风\n\n📱 iOS (14+): 设置 > 隐私 > 麦克风 > 允许此应用访问\n🤖 Android (10+): 设置 > 应用 > 此应用 > 权限 > 麦克风 > 允许');
+          alert('麦克风权限被拒绝，请在设备设置中允许此应用访问麦克风\n\n📱 iOS (14+): 设置 > 隐私 > 麦克风 > 允许此应用访问\n🤖 Android (10+): 设置 > 应用 > 此应用 > 权限 > 麦克风 > 允许\n\n💡 提示: 您可能需要刷新页面并重新尝试');
         } else if (permissionError.name === 'NotFoundError' || permissionError.name === 'DevicesNotFoundError') {
-          alert('未检测到可用的麦克风设备');
+          alert('未检测到可用的麦克风设备，请检查您的设备是否有麦克风或已正确连接');
         } else if (permissionError.name === 'NotReadableError' || permissionError.name === 'TrackStartError') {
-          alert('麦克风被其他应用占用或无法访问，请先关闭其他使用麦克风的应用');
+          alert('麦克风被其他应用占用或无法访问，请先关闭其他使用麦克风的应用，然后重新尝试');
+        } else if (permissionError.name === 'OverconstrainedError' || permissionError.name === 'ConstraintNotSatisfiedError') {
+          // 尝试使用更简单的参数重新请求
+          try {
+            const simpleStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            streamRef.current = simpleStream;
+            
+            const mediaRecorder = new MediaRecorder(simpleStream);
+            mediaRecorderRef.current = mediaRecorder;
+            
+            audioChunksRef.current = [];
+            
+            mediaRecorder.ondataavailable = (event) => {
+              if (event.data.size > 0) {
+                audioChunksRef.current.push(event.data);
+              }
+            };
+            
+            mediaRecorder.onstop = () => {
+              const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+              setAudioBlob(audioBlob);
+              
+              setTimeout(() => {
+                recognizeSpeech(audioBlob);
+              }, 100);
+            };
+            
+            mediaRecorder.start();
+            setIsRecording(true);
+            return;
+          } catch (simpleError) {
+            alert('无法满足麦克风参数要求，请尝试使用其他设备或浏览器');
+          }
         } else {
-          alert('无法访问麦克风，请检查权限设置和设备状态');
+          alert(`无法访问麦克风: ${permissionError.message || '未知错误'}\n\n请检查权限设置和设备状态，然后重新尝试`);
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('录音启动失败:', error);
-      alert('无法访问麦克风，请检查权限设置');
+      alert(`录音启动失败: ${error.message || '未知错误'}\n\n请检查浏览器兼容性和设备设置`);
     }
   };
 
