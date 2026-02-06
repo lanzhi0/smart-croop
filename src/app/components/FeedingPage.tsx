@@ -45,7 +45,11 @@ export function FeedingPage({ language }: FeedingPageProps) {
   ];
 
   const scheduleFeeding = (type: string) => {
-    alert(`${type === 'feed' ? '饲料' : type === 'water' ? '饮水' : '药物'}投喂已启动`);
+    if (language === 'zh') {
+      alert(`${type === 'feed' ? '饲料' : type === 'water' ? '饮水' : '药物'}投喂已启动`);
+    } else {
+      alert(`${type === 'feed' ? 'Feed' : type === 'water' ? 'Water' : 'Medicine'} feeding has started`);
+    }
   };
 
   return (

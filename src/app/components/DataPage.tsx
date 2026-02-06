@@ -145,7 +145,7 @@ export function DataPage({ language }: DataPageProps) {
           </LineChart>
         </ResponsiveContainer>
         <div className="mt-3 text-center text-sm text-gray-600">
-          {t.data.activityPeak}：<span className="text-amber-600">{t.data.morningPeriod} 8-11点</span> | 
+          {t.data.activityPeak}：<span className="text-amber-600">{t.data.morningPeriod} {language === 'zh' ? '8-11点' : '8-11 AM'}</span> | 
           {t.data.bestObservationTime}：<span className="text-green-600">{t.data.morningPeriod}</span>
         </div>
       </div>
@@ -159,7 +159,7 @@ export function DataPage({ language }: DataPageProps) {
             <PolarAngleAxis dataKey="behavior" tick={{ fontSize: 12 }} />
             <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 12 }} />
             <Radar 
-              name="行为频率" 
+              name={language === 'zh' ? '行为频率' : 'Behavior Frequency'} 
               dataKey="frequency" 
               stroke="#7cb342" 
               fill="#7cb342" 

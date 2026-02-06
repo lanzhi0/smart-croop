@@ -297,19 +297,19 @@ export function ChickenListPage({ language }: ChickenListPageProps) {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">{t.chickens.feedingTimes}</span>
-                    <span>8 次</span>
+                    <span>{language === 'zh' ? '8 次' : '8 times'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">{t.chickens.drinkingTimes}</span>
-                    <span>12 次</span>
+                    <span>{language === 'zh' ? '12 次' : '12 times'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">{t.chickens.activityDuration}</span>
-                    <span>6.5 小时</span>
+                    <span>{language === 'zh' ? '6.5 小时' : '6.5 hours'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">{t.chickens.eggsLaid}</span>
-                    <span>1 枚</span>
+                    <span>{language === 'zh' ? '1 枚' : '1 egg'}</span>
                   </div>
                 </div>
               </div>

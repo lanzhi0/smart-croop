@@ -1468,7 +1468,7 @@ export function HomePage({ language }: HomePageProps) {
                 {audioBlob && !isRecording && (
                   <div className="mt-2">
                     <div className="text-center text-sm text-green-600 mb-2">
-                      录音完成，音频大小: {(audioBlob.size / 1024).toFixed(2)} KB
+                      {language === 'zh' ? `录音完成，音频大小: ${(audioBlob.size / 1024).toFixed(2)} KB` : `Recording completed, audio size: ${(audioBlob.size / 1024).toFixed(2)} KB`}
                     </div>
                   </div>
                 )}
